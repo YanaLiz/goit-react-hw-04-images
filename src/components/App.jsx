@@ -1,97 +1,89 @@
 
 
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MainApp } from './App.styled';
 import Loader from './Loader';
-import axios from 'axios';
+import fetchImages from './Api';
 
 
+const App = () => {
+  const [searchImgName, setSearchImgName] = useState('');
+  const [images, setImages] = useState([]);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-class App extends Component {
-  state = {
-    images: [],
-    error: '',
-    page: 1,
-    imgSearch: '',
-    isLoading: false,
+  const searchFormSubmit = imgSearch => {
+    setSearchImgName(imgSearch);
+    reset();
   };
 
-  searchFormSubmit = imgSearch => {
-    this.setState({
-      imgSearch,
-      images: [],
-      page: 1,
-      error: '',
-    });
+  const reset = () => {
+    setImages([]);
+    setPage(1);
+    setError('');
   };
-  async componentDidUpdate(_, prevState) {
-    if (
-      prevState.imgSearch !== this.state.imgSearch ||
-      prevState.page !== this.state.page
-    ) {
-      this.setState({ isLoading: true });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (searchImgName === '') {
+      return;
+    }
+    
+    
+    async function imgGallery() {
+      setIsLoading(true);
       try {
-        const response = await axios({
-          url: 'https://pixabay.com/api/',
-          params: {
-            key: '31272833-6208e6f151d79070e75270c69',
-            q: this.state.imgSearch,
-            image_type: 'photo',
-            orientation: 'horizontal',
-            safesearch: true,
-            per_page: 12,
-            page: this.state.page,
-          },
-        });
-
-        if (response.totalHits === 0) {
-          return toast.error('Sorry, didn`t find, try another');
-        }
-
-        if (response.data.hits.length) {
-          return this.setState(prevState => ({
-            images: [...prevState.images, ...response.data.hits],
-          }));
+        const response = await fetchImages(searchImgName, page, controller);
+        if (response.length > 0) {
+          return setImages(prevState => [...prevState, ...response]);
         } else {
           return toast.error(
             'Sorry, there are no images matching your search query.'
           );
         }
       } catch (error) {
-        this.setState({ error });
+        setError(error.message);
       } finally {
-        this.setState({ isLoading: false });
+        setIsLoading(false);
       }
     }
-  }
-  loadMore = event => {
+    imgGallery();
+
+    return () => {
+      controller.abort()
+    }
+  },[page, searchImgName])
+
+  
+  const loadMore = event => {
     event.preventDefault();
-    this.setState(pr => ({
-      page: pr.page + 1,
-    }));
+     setPage(page => page + 1);
   };
 
 
-
-  render() {
-    const { images, isLoading, error } = this.state;
-    return (
-      <>
-        <Searchbar onSearch={this.searchFormSubmit} />
-        <MainApp>
-          {isLoading && <Loader />}
-          {error && <p>{error}</p>}
-          {images.length !== 0 && (
-            <ImageGallery images={images} onLoadMore={this.loadMore} />
-          )}
-          <ToastContainer autoClose={3000} />
-        </MainApp>
-      </>
-    );
-  }
+  return (
+    <>
+      <Searchbar onSearchProp={searchFormSubmit} />
+      <MainApp>
+        {isLoading && <Loader />}
+        
+        {error && <p>{error}</p>}
+        {images.length !== 0 && (
+          <ImageGallery images={images} onLoadMore={loadMore} />
+        )}
+        <ToastContainer autoClose={3000} />
+      </MainApp>
+    </>
+  );
 }
+
 export default App;
+
+
+
+
