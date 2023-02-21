@@ -41,8 +41,8 @@ const App = () => {
         setIsLoading(true);
         const response = await fetchImages(searchImgName, page, controller);
         if (response.length > 0) {
-          setImages(prevState => [...prevState, ...response]);
-          return;
+          return setImages(prevState => [...prevState, ...response]);
+          
         } else {
           return toast.error(
             'Sorry, there are no images matching your search query.'
@@ -58,7 +58,7 @@ const App = () => {
 
     return () => {
       controller.abort()
-    }
+    };
   },[page, searchImgName])
 
   

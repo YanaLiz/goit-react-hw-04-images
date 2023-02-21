@@ -6,7 +6,7 @@ const fetchImages = async (searchImgName, page, controller) => {
         url: 'https://pixabay.com/api/',
         params: {
           key: '31272833-6208e6f151d79070e75270c69',
-          q: 'cat',
+          q: searchImgName,
           image_type: 'photo',
           orientation: 'horizontal',
           safesearch: true,
