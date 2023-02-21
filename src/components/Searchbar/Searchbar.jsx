@@ -31,7 +31,7 @@ const Searchbar = ({onSearchProp}) => {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            onChange={event =>
+              onChange={event =>
               setSearchImgName(event.currentTarget.value.toLowerCase())
             }
             value={searchImgName}
