@@ -13,7 +13,7 @@ import fetchImages from './Api';
 const App = () => {
   const [searchImgName, setSearchImgName] = useState('');
   const [images, setImages] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -29,18 +29,20 @@ const App = () => {
   };
 
   useEffect(() => {
-    const controller = new AbortController();
+    
     if (searchImgName === '') {
       return;
     }
-    
+    const controller = new AbortController();
     
     async function imgGallery() {
-      setIsLoading(true);
+      
       try {
+        setIsLoading(true);
         const response = await fetchImages(searchImgName, page, controller);
         if (response.length > 0) {
-          return setImages(prevState => [...prevState, ...response]);
+          setImages(prevState => [...prevState, ...response]);
+          return;
         } else {
           return toast.error(
             'Sorry, there are no images matching your search query.'
