@@ -10,6 +10,7 @@ import Loader from './Loader';
 import fetchImages from './Api';
 
 
+
 const App = () => {
   const [searchImgName, setSearchImgName] = useState('');
   const [images, setImages] = useState([]);
@@ -83,6 +84,8 @@ const App = () => {
     </>
   );
 }
+
+
 
 export default App;
 

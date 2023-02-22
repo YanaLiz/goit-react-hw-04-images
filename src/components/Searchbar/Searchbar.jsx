@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { ImSearch } from 'react-icons/im';
 import { toast } from 'react-toastify';
 import {
@@ -43,10 +44,11 @@ const Searchbar = ({onSearchProp}) => {
         </SearchForm>
       </SearchbarHeader>
     );
-
-    
+ 
   };
-
+Searchbar.propTypes = {
+  onSearchProp: PropTypes.func.isRequired,
+};
  
 export default Searchbar;
 

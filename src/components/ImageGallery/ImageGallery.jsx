@@ -1,6 +1,7 @@
 import  { useState} from 'react';
 import ImageGalleryItem from '../ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
+import PropTypes from 'prop-types'
 
 import LoadMore from 'components/LoadMore';
 import Modal from 'components/Modal';
@@ -49,7 +50,16 @@ const ImageGallery = ({images, onLoadMore}) => {
     );
   }
 
+ImageGallery.propTypes = {
+  onLoadMore: PropTypes.func.isRequired,
+  images: PropTypes.array.isRequired,
+  modalImages: PropTypes.bool,
+  toggleModal: PropTypes.func,
+  webformatURL: PropTypes.string,
+  tags: PropTypes.string,
+  largeImageURL: PropTypes.string,
 
+};
 
 export default ImageGallery;
 

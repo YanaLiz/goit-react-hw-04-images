@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { OverlayWindow, ModalWindow } from './Modal.styled';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
 
 
 const modalRoot = document.querySelector('#modal-root');
@@ -35,7 +36,12 @@ const Modal = ({ onClose, children }) => {
       </OverlayWindow>,
       modalRoot
     );
-  }
+}
+  Modal.propTypes = {
+    tags: PropTypes.string,
+    largeImageURL: PropTypes.string,
+    onClose: PropTypes.func.isRequired,
+  };
 
 export default Modal;
 
